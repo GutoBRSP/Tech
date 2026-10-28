@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Evolução &amp; Tecnologia</title>
+<meta name="description" content="A jornada dos humanos com a tecnologia, da pedra lascada à inteligência artificial.">
+<meta name="color-scheme" content="dark light">
+<script>
+  // Aplica o tema salvo antes de desenhar a página (evita "piscar").
+  try { var t = localStorage.getItem('tema'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+</script>
+<style>
+/* Temas: cada um é só um conjunto de variáveis de cor. */
+:root, :root[data-theme="padrao"] {
+  --bg:#0f1623; --surface:#161f31; --surface-2:#1d283e; --text:#dde3ee; --muted:#98a4ba;
+  --accent:#6c9cf0; --accent-text:#0b1220; --border:#2a3753; --danger:#e57373; --ok:#7bc88f;
+}
+:root[data-theme="preto"] { --bg:#0b0b0c; --surface:#141416; --surface-2:#1c1c1f; --text:#e2e2e4; --muted:#9a9aa1; --accent:#8fb4f5; --accent-text:#0b0b0c; --border:#2b2b30; }
+:root[data-theme="claro"] { --bg:#f4f6fa; --surface:#fff; --surface-2:#eaeef5; --text:#1c2433; --muted:#566179; --accent:#2b5fc7; --accent-text:#fff; --border:#d3dae8; --danger:#b3261e; --ok:#2e7d4b; }
+:root[data-theme="azul"] { --bg:#0b2545; --surface:#11315c; --surface-2:#183c6e; --text:#e3edf9; --muted:#a5b9d6; --accent:#8ec5ff; --accent-text:#0b2545; --border:#264a7d; --danger:#f08a86; --ok:#86d6a0; }
+:root[data-theme="verde"] { --bg:#0e1f19; --surface:#142a22; --surface-2:#1b3a2f; --text:#dcede5; --muted:#9bb8aa; --accent:#73d1a0; --accent-text:#0a1a14; --border:#264a3b; --ok:#8fdc9f; }
+:root[data-theme="roxo"] { --bg:#17122a; --surface:#201a3a; --surface-2:#2a2349; --text:#e6e1f5; --muted:#aaa2c8; --accent:#b69cf5; --accent-text:#17122a; --border:#3a3160; }
+
+* { box-sizing:border-box; }
+html { color-scheme:dark; }
+:root[data-theme="claro"] { color-scheme:light; }
+body { margin:0; font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; background:var(--bg); color:var(--text); }
+.sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+.muted { color:var(--muted); }
+[hidden] { display:none !important; }
+
+.topbar { position:sticky; top:0; z-index:5; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+  padding:12px clamp(16px,4vw,40px); background:color-mix(in srgb,var(--bg) 92%,transparent); border-bottom:1px solid var(--border); backdrop-filter:blur(6px); }
+.brand { color:var(--text); text-decoration:none; font-weight:700; font-size:1.1rem; }
+.brand span { color:var(--accent); }
+.actions { display:flex; align-items:center; gap:12px; }
+.theme-picker { display:flex; align-items:center; gap:8px; color:var(--muted); font-size:.9rem; }
+
+select, input { font:inherit; color:var(--text); background:var(--surface-2); border:1px solid var(--border); border-radius:8px; padding:8px 10px; }
+input { width:100%; }
+select:focus-visible, input:focus-visible, .btn:focus-visible, .icon-btn:focus-visible, .links button:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+.btn { font:inherit; cursor:pointer; color:var(--text); background:var(--surface-2); border:1px solid var(--border); border-radius:8px; padding:8px 16px; }
+.btn:hover { border-color:var(--accent); }
+.btn.primary { background:var(--accent); color:var(--accent-text); border-color:var(--accent); font-weight:600; width:100%; margin-top:8px; }
+.btn.danger { color:var(--danger); margin-top:16px; }
+.btn:disabled { opacity:.6; cursor:progress; }
+
+.banner { padding:10px clamp(16px,4vw,40px); background:var(--surface-2); border-bottom:1px solid var(--border); font-size:.95rem; text-align:center; }
+
+main { max-width:820px; margin:0 auto; padding:0 clamp(16px,4vw,24px) 48px; }
+.hero { padding:56px 0 32px; }
+.hero h1 { font-size:clamp(1.8rem,5vw,2.6rem); line-height:1.2; margin:0 0 12px; }
+.hero p { margin:0; color:var(--muted); font-size:1.1rem; max-width:60ch; }
+
+.timeline { list-style:none; margin:0; padding:0 0 0 22px; border-left:2px solid var(--border); }
+.timeline li { position:relative; margin:0 0 20px; padding:16px 18px; background:var(--surface); border:1px solid var(--border); border-radius:12px; }
+.timeline li::before { content:""; position:absolute; left:-31px; top:22px; width:12px; height:12px; border-radius:50%; background:var(--accent); border:3px solid var(--bg); }
+.timeline .meta { display:flex; gap:8px; flex-wrap:wrap; align-items:center; font-size:.82rem; color:var(--muted); margin-bottom:4px; }
+.timeline .era { padding:1px 8px; border:1px solid var(--border); border-radius:999px; }
+.timeline h3 { margin:0 0 4px; font-size:1.15rem; }
+.timeline p { margin:0; color:var(--muted); }
+.more { text-align:center; padding:8px 0; }
+.footer { text-align:center; padding:24px 16px 40px; color:var(--muted); font-size:.9rem; border-top:1px solid var(--border); }
+
+dialog { width:min(92vw,400px); padding:20px; color:var(--text); background:var(--surface); border:1px solid var(--border); border-radius:14px; }
+dialog::backdrop { background:rgba(0,0,0,.6); }
+.dlg-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+.dlg-head h2 { margin:0; font-size:1.25rem; }
+.icon-btn { font-size:1.6rem; line-height:1; background:none; border:0; color:var(--muted); cursor:pointer; padding:0 6px; }
+dialog label { display:block; margin:12px 0 0; }
+dialog label span { display:block; font-size:.88rem; color:var(--muted); margin-bottom:4px; }
+.hint { font-size:.82rem; color:var(--muted); margin:6px 0 0; }
+.error { color:var(--danger); margin:10px 0 0; font-size:.92rem; }
+.info { color:var(--ok); margin:10px 0 0; font-size:.92rem; }
+.links { display:flex; flex-direction:column; gap:6px; margin-top:14px; align-items:center; }
+.links button { background:none; border:0; color:var(--accent); cursor:pointer; font:inherit; font-size:.92rem; text-decoration:underline; }
+.code-box { margin:12px 0; padding:14px; text-align:center; font:700 1.3rem/1.2 ui-monospace,Menlo,Consolas,monospace; letter-spacing:.08em;
+  background:var(--surface-2); border:1px dashed var(--accent); border-radius:10px; user-select:all; }
+.acc-list { display:grid; grid-template-columns:auto 1fr; gap:4px 12px; margin:8px 0 12px; }
+.acc-list dt { color:var(--muted); }
+.acc-list dd { margin:0; word-break:break-all; }
+@media (prefers-reduced-motion:no-preference) { .btn { transition:border-color .15s; } }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="#">Evolução <span>&amp; Tecnologia</span></a>
+  <div class="actions">
+    <label class="theme-picker"><span>Tema</span>
+      <select id="theme-select" aria-label="Escolher tema">
+        <option value="padrao">Azul escuro (padrão)</option>
+        <option value="preto">Preto</option>
+        <option value="claro">Claro</option>
+        <option value="azul">Azul</option>
+        <option value="verde">Verde</option>
+        <option value="roxo">Roxo</option>
+      </select>
+    </label>
+    <button id="account-btn" class="btn" type="button">Entrar</button>
+  </div>
+</header>
+
+<div id="banner" class="banner" role="status" hidden></div>
+
+<main>
+  <section class="hero">
+    <h1>A jornada dos humanos com a tecnologia</h1>
+    <p>Das primeiras ferramentas de pedra à inteligência artificial: cada invenção abriu caminho para a próxima.</p>
+  </section>
+  <section aria-labelledby="tl-title">
+    <h2 id="tl-title" class="sr-only">Linha do tempo</h2>
+    <ol id="timeline" class="timeline"></ol>
+    <div class="more">
+      <p id="tl-status" class="muted" aria-live="polite"></p>
+      <button id="more-btn" class="btn" type="button" hidden>Carregar mais</button>
+    </div>
+  </section>
+</main>
+
+<footer class="footer"><p>Código aberto para estudo: clique com o botão direito e escolha "Ver código-fonte" para ver como funciona.</p></footer>
+
+<!-- Entrar / Criar conta / Recuperar senha -->
+<dialog id="auth-dialog" aria-labelledby="auth-title">
+  <form id="auth-form" novalidate>
+    <div class="dlg-head"><h2 id="auth-title"></h2><button type="button" class="icon-btn" data-close aria-label="Fechar">&times;</button></div>
+    <label data-modes="register"><span>Nome</span><input name="name" autocomplete="name" maxlength="60"></label>
+    <label data-modes="login register recover"><span>E-mail</span><input name="email" type="email" autocomplete="email" maxlength="320"></label>
+    <label data-modes="recover"><span>Código de recuperação</span><input name="code" autocomplete="off" maxlength="20" placeholder="XXXX-XXXX-XXXX"></label>
+    <label data-modes="login register recover"><span data-pw-label>Senha</span><input name="password" type="password" maxlength="128"></label>
+    <p class="hint" data-modes="register recover">Mínimo de 8 caracteres, com letras e números.</p>
+    <div data-modes="code">
+      <p>Conta criada! Guarde este <strong>código de recuperação</strong> em um lugar seguro. Ele só aparece agora e é a única forma de recuperar a conta se você esquecer a senha.</p>
+      <div id="code-box" class="code-box"></div>
+      <button id="copy-code" type="button" class="btn">Copiar código</button>
+    </div>
+    <p id="auth-error" class="error" role="alert" hidden></p>
+    <p id="auth-info" class="info" role="status" hidden></p>
+    <button id="auth-submit" class="btn primary" type="submit"></button>
+    <div class="links" id="auth-links"></div>
+  </form>
+</dialog>
+
+<!-- Minha conta -->
+<dialog id="account-dialog" aria-labelledby="acc-title">
+  <div class="dlg-head"><h2 id="acc-title">Minha conta</h2><button type="button" class="icon-btn" data-close aria-label="Fechar">&times;</button></div>
+  <dl class="acc-list"><dt>Nome</dt><dd id="acc-name"></dd><dt>E-mail</dt><dd id="acc-email"></dd></dl>
+  <p class="hint">Neste arquivo HTML, a conta fica salva apenas neste navegador.</p>
+  <button id="logout-btn" class="btn danger" type="button">Sair da conta</button>
+</dialog>
+
+<script>
+'use strict';
+const $ = (s) => document.querySelector(s);
+
+/* ---------- Dados da linha do tempo ---------- */
+const TIMELINE = [
+  { year: 'Cerca de 2,6 milhões de anos atrás', era: 'Pré-história', title: 'Ferramentas de pedra', text: 'Os primeiros hominínios lascam pedras para cortar, raspar e quebrar. É o início da tecnologia humana.' },
+  { year: 'Centenas de milhares de anos atrás', era: 'Pré-história', title: 'Domínio do fogo', text: 'O fogo passa a ser controlado: aquece, protege, afasta predadores e permite cozinhar os alimentos.' },
+  { year: 'Cerca de 3500 a.C.', era: 'Antiguidade', title: 'Escrita e roda', text: 'Na Mesopotâmia surgem a escrita cuneiforme e a roda, e o conhecimento começa a ser registrado e transportado.' },
+  { year: 'Cerca de 1440', era: 'Idade Moderna', title: 'Prensa de tipos móveis', text: 'Gutenberg aperfeiçoa a impressão na Europa. Livros ficam mais baratos e as ideias circulam muito mais rápido.' },
+  { year: '1609', era: 'Idade Moderna', title: 'Telescópio na astronomia', text: 'Galileu aponta o telescópio para o céu e muda a forma como a humanidade enxerga o universo.' },
+  { year: '1712', era: 'Revolução Industrial', title: 'Máquina a vapor', text: 'Newcomen constrói a primeira máquina a vapor de uso prático, abrindo caminho para fábricas, trens e navios a vapor.' },
+  { year: '1837', era: 'Revolução Industrial', title: 'Telégrafo elétrico', text: 'Mensagens passam a viajar quase instantaneamente por fios, e a comunicação à distância muda para sempre.' },
+  { year: '1876', era: 'Revolução Industrial', title: 'Telefone', text: 'A voz humana é transmitida por fios elétricos, aproximando pessoas separadas por grandes distâncias.' },
+  { year: '1879', era: 'Revolução Industrial', title: 'Lâmpada elétrica', text: 'A lâmpada incandescente se torna prática, e as cidades e as casas ganham luz elétrica nas décadas seguintes.' },
+  { year: '1903', era: 'Século XX', title: 'Primeiro voo motorizado', text: 'Os irmãos Wright realizam o primeiro voo controlado de um avião com motor, e o céu se abre para viagens e transporte.' },
+  { year: '1947', era: 'Século XX', title: 'Transistor', text: 'O transistor substitui as válvulas e torna possível a eletrônica pequena, rápida e barata: a base dos computadores.' },
+  { year: '1957', era: 'Era Espacial', title: 'Primeiro satélite artificial', text: 'O Sputnik 1 é lançado e inaugura a era espacial, que depois traria satélites de comunicação, GPS e previsão do tempo.' },
+  { year: '1969', era: 'Era Espacial', title: 'Homem na Lua e ARPANET', text: 'A Apollo 11 leva humanos à Lua. No mesmo ano, a ARPANET conecta os primeiros computadores, precursora da internet.' },
+  { year: '1971', era: 'Era Digital', title: 'Microprocessador', text: 'O Intel 4004 coloca um processador inteiro em um único chip e abre caminho para os computadores pessoais.' },
+  { year: '1989', era: 'Era Digital', title: 'World Wide Web', text: 'Tim Berners-Lee propõe a Web, e a internet passa a ser acessível a qualquer pessoa com um navegador.' },
+  { year: '2007', era: 'Era Digital', title: 'Smartphones', text: 'Com o lançamento do iPhone, os smartphones se popularizam e levam internet, câmera e mapas para o bolso de bilhões de pessoas.' },
+  { year: '2012', era: 'Era Digital', title: 'Edição genética com CRISPR', text: 'Cientistas demonstram o CRISPR-Cas9 como ferramenta de edição de DNA, com grande potencial para a medicina.' },
+  { year: '2022', era: 'Era da IA', title: 'IA generativa para todos', text: 'Ferramentas de inteligência artificial capazes de escrever, programar e criar imagens chegam ao grande público.' }
+];
+
+/* ---------- Armazenamento local (try/catch: pode estar indisponível) ---------- */
+const store = {
+  get(k, fallback) { try { const v = localStorage.getItem(k); return v === null ? fallback : JSON.parse(v); } catch { return fallback; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch { return false; } }
+};
+const getUsers = () => store.get('evo_users', {});
+
+/* ---------- Tema ---------- */
+const themeSelect = $('#theme-select');
+let currentEmail = null;
+
+function applyTheme(theme) {
+  document.documentElement.dataset.theme = theme;
+  themeSelect.value = theme;
+  try { localStorage.setItem('tema', theme); } catch {}
+}
+themeSelect.addEventListener('change', () => {
+  applyTheme(themeSelect.value);
+  if (currentEmail) { const u = getUsers(); if (u[currentEmail]) { u[currentEmail].theme = themeSelect.value; store.set('evo_users', u); } }
+});
+themeSelect.value = document.documentElement.dataset.theme || 'padrao';
+
+/* ---------- Linha do tempo: 6 marcos por vez ---------- */
+const PAGE = 6;
+const list = $('#timeline'), moreBtn = $('#more-btn'), tlStatus = $('#tl-status');
+
+function renderItem(item) {
+  const li = document.createElement('li');
+  const meta = document.createElement('div'); meta.className = 'meta';
+  const era = document.createElement('span'); era.className = 'era'; era.textContent = item.era;
+  const year = document.createElement('span'); year.textContent = item.year;
+  meta.append(era, year);
+  const h = document.createElement('h3'); h.textContent = item.title;
+  const p = document.createElement('p'); p.textContent = item.text;
+  li.append(meta, h, p);
+  return li;
+}
+function loadMore() {
+  const frag = document.createDocumentFragment();
+  TIMELINE.slice(list.children.length, list.children.length + PAGE).forEach((it) => frag.append(renderItem(it)));
+  list.append(frag);
+  tlStatus.textContent = `${list.children.length} de ${TIMELINE.length} marcos`;
+  moreBtn.hidden = list.children.length >= TIMELINE.length;
+}
+moreBtn.addEventListener('click', loadMore);
+
+/* ---------- Segurança local: PBKDF2 (Web Crypto) ---------- */
+const enc = new TextEncoder();
+const toB64 = (buf) => btoa(String.fromCharCode(...new Uint8Array(buf)));
+const fromB64 = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
+const newSalt = () => toB64(crypto.getRandomValues(new Uint8Array(16)));
+
+async function hashSecret(secret, saltB64) {
+  const key = await crypto.subtle.importKey('raw', enc.encode(secret), 'PBKDF2', false, ['deriveBits']);
+  const bits = await crypto.subtle.deriveBits({ name: 'PBKDF2', hash: 'SHA-256', salt: fromB64(saltB64), iterations: 200000 }, key, 256);
+  return toB64(bits);
+}
+function newRecoveryCode() {
+  const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // 32 símbolos, sem confusão entre 0/O e 1/I
+  const bytes = crypto.getRandomValues(new Uint8Array(12));
+  const chars = Array.from(bytes, (b) => alphabet[b % 32]);
+  return [chars.slice(0, 4), chars.slice(4, 8), chars.slice(8, 12)].map((g) => g.join('')).join('-');
+}
+const normCode = (c) => String(c).toUpperCase().replace(/[^A-Z0-9]/g, '');
+const isEmail = (v) => /^[^\s@]{1,64}@[^\s@]{1,255}\.[^\s@]{2,}$/.test(v);
+const normEmail = (v) => String(v).trim().toLowerCase();
+function passwordProblem(p) {
+  if (p.length < 8) return 'A senha precisa ter pelo menos 8 caracteres.';
+  if (p.length > 128) return 'A senha é longa demais.';
+  if (!/[a-zA-Z]/.test(p) || !/\d/.test(p)) return 'Use letras e números na senha.';
+  return '';
+}
+
+// Freia tentativas seguidas erradas (5 erros = 30 segundos de espera).
+let failures = 0, lockedUntil = 0;
+function checkLock() {
+  if (Date.now() < lockedUntil) throw new Error(`Muitas tentativas. Aguarde ${Math.ceil((lockedUntil - Date.now()) / 1000)} s.`);
+}
+function registerFailure() { if (++failures >= 5) { lockedUntil = Date.now() + 30000; failures = 0; } }
+
+/* ---------- Janela de login ---------- */
+const authDialog = $('#auth-dialog'), authForm = $('#auth-form');
+const authError = $('#auth-error'), authInfo = $('#auth-info');
+let mode = 'login';
+
+const MODES = {
+  login:   { title: 'Entrar',          submit: 'Entrar',                 links: [['Criar conta', 'register'], ['Esqueci minha senha', 'recover']] },
+  register:{ title: 'Criar conta',     submit: 'Criar conta',            links: [['Já tenho conta', 'login']] },
+  recover: { title: 'Recuperar senha', submit: 'Definir nova senha',     links: [['Voltar ao login', 'login']] },
+  code:    { title: 'Conta criada',    submit: 'Entendi, continuar',     links: [] }
+};
+
+function setMode(next) {
+  mode = next;
+  const cfg = MODES[mode];
+  $('#auth-title').textContent = cfg.title;
+  $('#auth-submit').textContent = cfg.submit;
+  authForm.querySelectorAll('[data-modes]').forEach((el) => { el.hidden = !el.dataset.modes.split(' ').includes(mode); });
+  authForm.querySelector('[data-pw-label]').textContent = mode === 'recover' ? 'Nova senha' : 'Senha';
+  authForm.password.autocomplete = mode === 'login' ? 'current-password' : 'new-password';
+  $('#auth-links').replaceChildren(...cfg.links.map(([label, target]) => {
+    const b = document.createElement('button'); b.type = 'button'; b.textContent = label;
+    b.addEventListener('click', () => { clearMessages(); setMode(target); });
+    return b;
+  }));
+}
+function clearMessages() { authError.hidden = true; authInfo.hidden = true; }
+function showAuth(next) { clearMessages(); authForm.reset(); setMode(next); if (!authDialog.open) authDialog.showModal(); }
+
+authForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  clearMessages();
+  if (mode === 'code') { authDialog.close(); return; }
+  if (!window.crypto || !crypto.subtle) {
+    authError.textContent = 'Este navegador não permite criptografia aqui. Abra o arquivo em um navegador atualizado.';
+    authError.hidden = false; return;
+  }
+  const f = Object.fromEntries(new FormData(authForm));
+  const email = normEmail(f.email || '');
+  const btn = $('#auth-submit'); btn.disabled = true;
+  try {
+    const users = getUsers();
+    if (mode === 'register') {
+      const name = (f.name || '').trim().slice(0, 60);
+      if (!name) throw new Error('Informe seu nome.');
+      if (!isEmail(email)) throw new Error('E-mail inválido.');
+      const problem = passwordProblem(f.password || ''); if (problem) throw new Error(problem);
+      if (users[email]) throw new Error('Não foi possível criar a conta com esses dados.');
+      const code = newRecoveryCode();
+      const salt = newSalt(), recSalt = newSalt();
+      users[email] = { name, salt, hash: await hashSecret(f.password, salt), recSalt, recHash: await hashSecret(normCode(code), recSalt), theme: themeSelect.value };
+      if (!store.set('evo_users', users)) throw new Error('Não foi possível salvar a conta neste navegador.');
+      login(email);
+      $('#code-box').textContent = code;
+      setMode('code');
+      authForm.querySelector('[data-modes="code"] p').textContent = 'Conta criada! Guarde este código de recuperação em um lugar seguro. Ele só aparece agora e é a única forma de recuperar a conta se você esquecer a senha.';
+    } else if (mode === 'login') {
+      checkLock();
+      const u = users[email];
+      // Mesma mensagem para e-mail inexistente ou senha errada.
+      if (!u || (await hashSecret(f.password || '', u.salt)) !== u.hash) { registerFailure(); throw new Error('E-mail ou senha incorretos.'); }
+      failures = 0; login(email); authDialog.close();
+    } else if (mode === 'recover') {
+      checkLock();
+      const u = users[email];
+      const problem = passwordProblem(f.password || ''); if (problem) throw new Error(problem);
+      if (!u || (await hashSecret(normCode(f.code || ''), u.recSalt)) !== u.recHash) { registerFailure(); throw new Error('E-mail ou código de recuperação incorretos.'); }
+      failures = 0;
+      const code = newRecoveryCode(); // o código antigo deixa de valer
+      u.salt = newSalt(); u.hash = await hashSecret(f.password, u.salt);
+      u.recSalt = newSalt(); u.recHash = await hashSecret(normCode(code), u.recSalt);
+      store.set('evo_users', users);
+      login(email);
+      $('#code-box').textContent = code;
+      setMode('code');
+      authForm.querySelector('[data-modes="code"] p').textContent = 'Senha alterada! Este é o seu NOVO código de recuperação (o anterior deixou de valer). Guarde-o em um lugar seguro.';
+    }
+  } catch (err) {
+    authError.textContent = err.message; authError.hidden = false;
+  } finally { btn.disabled = false; }
+});
+
+$('#copy-code').addEventListener('click', async () => {
+  try { await navigator.clipboard.writeText($('#code-box').textContent); authInfo.textContent = 'Código copiado.'; }
+  catch { authInfo.textContent = 'Não foi possível copiar. Selecione o código e copie manualmente.'; }
+  authInfo.hidden = false;
+});
+
+/* ---------- Sessão e conta ---------- */
+const accountBtn = $('#account-btn'), accountDialog = $('#account-dialog'), bannerEl = $('#banner');
+function banner(text) { bannerEl.textContent = text; bannerEl.hidden = !text; }
+
+function login(email) {
+  const u = getUsers()[email];
+  currentEmail = email;
+  store.set('evo_session', email);
+  accountBtn.textContent = u.name.split(' ')[0];
+  if (u.theme) applyTheme(u.theme);
+}
+accountBtn.addEventListener('click', () => {
+  if (!currentEmail) return showAuth('login');
+  const u = getUsers()[currentEmail];
+  $('#acc-name').textContent = u.name; $('#acc-email').textContent = currentEmail;
+  accountDialog.showModal();
+});
+$('#logout-btn').addEventListener('click', () => {
+  currentEmail = null; try { localStorage.removeItem('evo_session'); } catch {}
+  accountBtn.textContent = 'Entrar'; accountDialog.close();
+});
+
+document.querySelectorAll('dialog [data-close]').forEach((b) => b.addEventListener('click', () => b.closest('dialog').close()));
+document.querySelectorAll('dialog').forEach((d) => d.addEventListener('click', (e) => { if (e.target === d) d.close(); }));
+
+/* ---------- Início ---------- */
+loadMore();
+const saved = store.get('evo_session', null);
+if (saved && getUsers()[saved]) login(saved);
+</script>
+</body>
+</html>
