@@ -1,0 +1,9 @@
+{
+  "name": "evolucao-tecnologia",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Linha do tempo da tecnologia, com contas de usuário seguras.",
+  "engines": { "node": ">=20" },
+  "scripts": { "start": "node src/server.js", "test": "node --test" },
+  "dependencies": { "nodemailer": "^7.0.0" }
+}

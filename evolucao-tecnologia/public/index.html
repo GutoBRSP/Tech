@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Evolução &amp; Tecnologia</title>
+<meta name="description" content="A jornada dos humanos com a tecnologia, da pedra lascada à inteligência artificial.">
+<meta name="color-scheme" content="dark light">
+<link rel="stylesheet" href="/style.css">
+<script src="/theme-init.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">Ir para o conteúdo</a>
+<header class="topbar">
+  <a class="brand" href="#">Evolução <span>&amp; Tecnologia</span></a>
+  <div class="actions">
+    <label class="theme-picker"><span>Tema</span>
+      <select id="theme-select" aria-label="Escolher tema">
+        <option value="padrao">Azul escuro (padrão)</option>
+        <option value="preto">Preto</option>
+        <option value="claro">Claro</option>
+        <option value="azul">Azul</option>
+        <option value="verde">Verde</option>
+        <option value="roxo">Roxo</option>
+      </select>
+    </label>
+    <button id="account-btn" class="btn" type="button">Entrar</button>
+  </div>
+</header>
+
+<div id="banner" class="banner" role="status" hidden></div>
+
+<main id="main">
+  <section class="hero">
+    <h1>A jornada dos humanos com a tecnologia</h1>
+    <p>Das primeiras ferramentas de pedra à inteligência artificial: cada invenção abriu caminho para a próxima.</p>
+  </section>
+  <section aria-labelledby="tl-title">
+    <h2 id="tl-title" class="sr-only">Linha do tempo</h2>
+    <div class="tools">
+      <input id="search" type="search" placeholder="Buscar por invenção, pessoa ou ano" aria-label="Buscar na linha do tempo" autocomplete="off">
+      <div class="chips" id="chips" role="group" aria-label="Filtrar por era"></div>
+    </div>
+    <ol id="timeline" class="timeline"></ol>
+    <div id="empty" class="empty" hidden><p class="muted">Nenhum marco encontrado. Tente outra palavra ou outra era.</p><button id="clear-btn" class="btn" type="button">Limpar filtros</button></div>
+    <div class="more">
+      <p id="tl-status" class="muted" aria-live="polite"></p>
+      <button id="more-btn" class="btn" type="button" hidden>Carregar mais</button>
+    </div>
+  </section>
+</main>
+
+<footer class="footer"><p>Projeto de estudo: o código-fonte está na pasta do projeto.</p></footer>
+
+<!-- Entrar / Criar conta / Recuperar senha -->
+<dialog id="auth-dialog" aria-labelledby="auth-title">
+  <form id="auth-form" novalidate>
+    <div class="dlg-head"><h2 id="auth-title"></h2><button type="button" class="icon-btn" data-close aria-label="Fechar">&times;</button></div>
+    <label data-modes="register"><span>Nome</span><input name="name" autocomplete="name" maxlength="60"></label>
+    <label data-modes="login register forgot"><span>E-mail</span><input name="email" type="email" autocomplete="email" maxlength="320"></label>
+    <label data-modes="register"><span>E-mail de backup (opcional)</span><input name="backup" type="email" autocomplete="off" maxlength="320"></label>
+    <label data-modes="login register reset"><span data-pw-label>Senha</span><input name="password" type="password" maxlength="128"></label>
+    <label class="pw-toggle" data-modes="login register reset"><input type="checkbox" id="show-pw"> Mostrar senha</label>
+    <p class="hint" data-modes="register reset">Mínimo de 8 caracteres, com letras e números.</p>
+    <p id="auth-error" class="error" role="alert" hidden></p>
+    <p id="auth-info" class="info" role="status" hidden></p>
+    <button id="auth-submit" class="btn primary" type="submit"></button>
+    <div class="links" id="auth-links"></div>
+  </form>
+</dialog>
+
+<!-- Minha conta -->
+<dialog id="account-dialog" aria-labelledby="acc-title">
+  <div class="dlg-head"><h2 id="acc-title">Minha conta</h2><button type="button" class="icon-btn" data-close aria-label="Fechar">&times;</button></div>
+  <dl class="acc-list"><dt>Nome</dt><dd id="acc-name"></dd><dt>E-mail</dt><dd id="acc-email"></dd></dl>
+  <p class="hint">Sua conta fica salva no servidor, com a senha protegida por hash.</p>
+  <button id="logout-btn" class="btn danger" type="button">Sair da conta</button>
+</dialog>
+
+<script src="/app.js"></script>
+</body>
+</html>
